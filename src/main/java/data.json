@@ -10,6 +10,7 @@
       "description": "You are at the north entry of the Ikenberry Commons, near Wassaja Hall. There seems to be no student in sight. Weird.",
       "items": {
         "Dining Hall Key": {
+          "name": "Dining Hall Key",
           "description":"A silver key used to unlock the Ikenberry Dining Hall."
         }
       },
@@ -22,6 +23,7 @@
       "description": "You are at the Ike, a hub for all Ikenberry activities.",
       "items": {
         "Blood-Stained iCard": {
+          "name": "Blood-Stained iCard",
           "description":"An iCard with blood stains belonging to someone named Matthew."
         }
       },

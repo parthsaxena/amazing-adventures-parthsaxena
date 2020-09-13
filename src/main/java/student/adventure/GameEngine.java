@@ -33,6 +33,26 @@ public class GameEngine {
     this.currentRoom = room;
   }
 
+  public void takeItem(Item item) {
+    // Increase the frequency of this item in inventory
+    inventory.put(item, inventory.getOrDefault(item, 0) + 1);
+
+    // Remove item from the room's items
+    currentRoom.getItems().remove(item.getName());
+  }
+
+  public void dropItem(Item item) {
+    // Decrease frequency of this item in inventory or remove it entirely
+    if (inventory.get(item) > 1) {
+      inventory.put(item, inventory.get(item) - 1);
+    } else {
+      inventory.remove(item);
+    }
+
+    // Add item to current room's items
+    currentRoom.getItems().put(item.getName(), item);
+  }
+
   public Map<String, Room> getRooms() {
     return rooms;
   }

@@ -90,24 +90,96 @@ public class IO {
     }
   }
 
+  /**
+   * Parses action and argument of command
+   *
+   * @param command
+   * @param action
+   * @param argument
+   */
   private void handleCommand(String command, String action, String argument) {
     if (action.equals("go")) {
-      Set<String> directionSet = engine.getCurrentRoom().getDirections().keySet();
-      for (String direction : directionSet) {
-        if (argument.equals(direction.toLowerCase())) {
-          changeDirection(direction);
-          return;
-        }
-      }
+      handleGoAction(argument);
+    } else if (action.equals("take")) {
+      handleTakeAction(argument);
+    } else if (action.equals("drop")) {
+      handleDropAction(argument);
     }
     handleInvalidCommand(command);
   }
 
+  private void handleGoAction(String argument) {
+    Set<String> directionSet = engine.getCurrentRoom().getDirections().keySet();
+    for (String direction : directionSet) {
+      if (argument.equals(direction.toLowerCase())) {
+        changeDirection(direction);
+        return;
+      }
+    }
+    System.out.println("You can't go \"" + argument + "\"!");
+    prompt();
+  }
+
+  private void handleTakeAction(String argument) {
+    Set<String> itemSet = engine.getCurrentRoom().getItems().keySet();
+    for (String item : itemSet) {
+      if (argument.equals(item.toLowerCase())) {
+        Item itemObject = engine.getCurrentRoom().getItems().get(item);
+        engine.takeItem(itemObject);
+        prompt();
+        return;
+      }
+    }
+
+    System.out.println("There is no item \"" + argument + "\" in the room!");
+    prompt();
+  }
+
+  private void handleDropAction(String argument) {
+    Item itemToDrop = null;
+    Set<Item> inventorySet = engine.getInventory().keySet();
+    for (Item item : inventorySet) {
+      if (argument.equals(item.getName().toLowerCase())) {
+        itemToDrop = item;
+        break;
+      }
+    }
+
+    if (itemToDrop == null) {
+      System.out.println("You do not have \"" + argument + "\" in your inventory!");
+      prompt();
+      return;
+    }
+
+    Set<String> itemSet = engine.getCurrentRoom().getItems().keySet();
+    for (String item : itemSet) {
+      if (argument.equals(item.toLowerCase())) {
+        System.out.println("The item \"" + item +"\" is already in this room!");
+        prompt();
+        return;
+      }
+    }
+
+    engine.dropItem(itemToDrop);
+    prompt();
+  }
+
+  /**
+   * Handles case of invalid command entered by user
+   *
+   * @param command
+   */
   private void handleInvalidCommand(String command) {
     System.out.println("I don't quite understand \"" + command + "\"!");
     prompt();
   }
 
+  /**
+   * Generates an Enum value from the String direction and passes
+   * it along to GameEngine
+   *
+   * @param direction
+   */
   private void changeDirection(String direction) {
     Direction directionEnum = Direction.valueOf(direction.toUpperCase());
     engine.changeDirection(directionEnum);
@@ -138,6 +210,11 @@ public class IO {
     return stringList.substring(0, stringList.length()-2);
   }
 
+  /**
+   * Checks sanity of data, all subfields, and the map itself
+   *
+   * @param data
+   */
   private void sanitizeData(Data data) {
     try {
 
@@ -149,6 +226,12 @@ public class IO {
     }
   }
 
+  /**
+   * Helper method that throws an Exception if given object is null
+   *
+   * @param o
+   * @throws Exception
+   */
   private void checkNull(Object o) throws Exception {
     if (o == null) {
       throw new Exception();
