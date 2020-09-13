@@ -62,6 +62,57 @@ public class IO {
     System.out.print("> ");
 
     String command = scanner.nextLine();
+
+    dissectCommand(command);
+  }
+
+  private void dissectCommand(String command) {
+    command = command.toLowerCase().trim();
+    if (command == "exit" || command == "quit") {
+      System.exit(0);
+    }
+
+    String action = "";
+    String argument = "";
+    int i;
+    for (i = 0; i < command.length(); i++) {
+      if (command.charAt(i) == ' ') {
+        action = command.substring(0, i).trim();
+        argument = command.substring(i).trim();
+        break;
+      }
+    }
+
+    if (action.length() == 0 || argument.length() == 0) {
+      handleInvalidCommand(command);
+    } else {
+      handleCommand(command, action, argument);
+    }
+  }
+
+  private void handleCommand(String command, String action, String argument) {
+    if (action.equals("go")) {
+      Set<String> directionSet = engine.getCurrentRoom().getDirections().keySet();
+      for (String direction : directionSet) {
+        if (argument.equals(direction.toLowerCase())) {
+          changeDirection(direction);
+          return;
+        }
+      }
+    }
+    handleInvalidCommand(command);
+  }
+
+  private void handleInvalidCommand(String command) {
+    System.out.println("I don't quite understand \"" + command + "\"!");
+    prompt();
+  }
+
+  private void changeDirection(String direction) {
+    Direction directionEnum = Direction.valueOf(direction.toUpperCase());
+    engine.changeDirection(directionEnum);
+
+    examine();
   }
 
   /**

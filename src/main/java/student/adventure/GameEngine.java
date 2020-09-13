@@ -26,6 +26,13 @@ public class GameEngine {
     this.currentRoom = rooms.get(currentRoomKey);
   }
 
+  public void changeDirection(Direction direction) {
+    String roomKey = currentRoom.getDirections().get(direction.getKey());
+    Room room = rooms.get(roomKey);
+
+    this.currentRoom = room;
+  }
+
   public Map<String, Room> getRooms() {
     return rooms;
   }
