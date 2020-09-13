@@ -28,6 +28,65 @@ public class IO {
     sanitizeData(data);
   }
 
+  public void start() {
+    System.out.println(data.getConfiguration().getInitializationText() + "\n");
+
+    engine = new GameEngine(data.getRooms(), data.getConfiguration());
+    examine();
+  }
+
+  /**
+   * Prints out details of the current room
+   */
+  private void examine() {
+    Map<String, String> directions = engine.getCurrentRoom().getDirections();
+    Map<String, Item> items = engine.getCurrentRoom().getItems();
+
+    // Print room description
+    System.out.println(engine.getCurrentRoom().getDescription());
+
+    // Print directions guide
+    System.out.println(buildStringFromList(StringList.DIRECTIONS));
+
+    // Print items guide
+    System.out.println(buildStringFromList(StringList.ITEMS));
+
+    // Prompt user for input
+    prompt();
+  }
+
+  /**
+   * Prompts the user to input a command*
+   */
+  private void prompt() {
+    System.out.print("> ");
+
+    String command = scanner.nextLine();
+  }
+
+  /**
+   * Converts a list to a pretty-print String for I/O
+   *
+   * @param type the type of list to convert
+   * @return String
+   */
+  private String buildStringFromList(StringList type) {
+    String stringList = "From here, you can go: ";
+    Set<String> keySet = engine.getCurrentRoom().getDirections().keySet();
+
+    if (type == StringList.ITEMS) {
+      stringList = "Items visible: ";
+      keySet = engine.getCurrentRoom().getItems().keySet();
+    }
+    // Add items in list to String
+    for (String key : keySet) {
+      stringList += key + ", ";
+    }
+
+    // Cut off the last two characters because of extra comma
+    return stringList.substring(0, stringList.length()-2);
+  }
+
   private void sanitizeData(Data data) {
     try {
 
@@ -44,4 +103,9 @@ public class IO {
       throw new Exception();
     }
   }
+}
+
+enum StringList {
+  DIRECTIONS,
+  ITEMS
 }
