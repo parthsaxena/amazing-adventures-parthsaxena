@@ -12,10 +12,4 @@ public class AdventureTest {
     public void setUp() {
         // This is run before every test.
     }
-
-    @Test
-    public void sanityCheck() {
-        // TODO: Remove this unnecessary test case.
-        assertThat("CS 126: Software Design Studio", CoreMatchers.containsString("Software"));
-    }
 }

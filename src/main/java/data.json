@@ -1,0 +1,34 @@
+{
+  "Configuration":{
+    "startingRoom":"Ikenberry Commons",
+    "winningRoom":"State Farm Stadium",
+    "winningItems":[],
+    "initializationText": "Welcome to Illini Frenzy 3.0!"
+  },
+  "Rooms":{
+    "Ikenberry Commons": {
+      "description": "You are at the north entry of the Ikenberry Commons, near Wassaja Hall. There seems to be no student in sight. Weird.",
+      "items": {
+        "Dining Hall Key": {
+          "description":"A silver key used to unlock the Ikenberry Dining Hall."
+        }
+      },
+      "directions": {
+        "East": "The Ike",
+        "West": "Wassaja Hall"
+      }
+    },
+    "The Ike": {
+      "description": "You are at the Ike, a hub for all Ikenberry activities.",
+      "items": {
+        "Blood-Stained iCard": {
+          "description":"An iCard with blood stains belonging to someone named Matthew."
+        }
+      },
+      "directions": {
+        "North": "Ikenberry Dining Hall",
+        "West": "Ikenberry Commons"
+      }
+    }
+  }
+}
