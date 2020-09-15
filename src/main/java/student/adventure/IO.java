@@ -20,7 +20,6 @@ public class IO {
   private final Gson gson;
   private Data data;
   private final Scanner scanner;
-
   private Map<String, Action> actionMap;
 
   /**
@@ -108,6 +107,15 @@ public class IO {
   }
 
   /**
+   * Begins the game in the given room for testing purposes
+   *
+   * @param startingRoom
+   */
+  public void start(String startingRoom) {
+    engine = new GameEngine(data.getRooms(), data.getConfiguration(), startingRoom);
+  }
+
+  /**
    * Prints out details of the current room
    */
   private void examine() {
@@ -168,10 +176,12 @@ public class IO {
    *
    * @param argument
    */
-  private void handleTakeAction(String argument) {
+  private Result handleTakeAction(String argument) {
     Result res = engine.takeItem(argument);
     System.out.println(res.getMessage());
     prompt();
+
+    return res;
   }
 
   /**
@@ -179,13 +189,14 @@ public class IO {
    *
    * @param argument
    */
-  private void handleDropAction(String argument) {
+  private Result handleDropAction(String argument) {
     Result res = engine.dropItem(argument);
     if (!res.isSuccessful()) {
       System.out.println(res.getMessage());
     }
 
     prompt();
+    return res;
   }
 
   /**
@@ -204,9 +215,9 @@ public class IO {
    * @param direction
    */
   private void handleGoCommand(String direction) {
-    String message = engine.changeDirection(direction);
-    if (message != null) {
-      System.out.println(message);
+    Result res = engine.changeDirection(direction);
+    if (!res.isSuccessful()) {
+      System.out.println(res.getMessage());
     } else {
       examine();
     }
@@ -238,6 +249,10 @@ public class IO {
     } catch(Exception e) {
       throw new IllegalArgumentException("Input JSON has invalid schema / data.");
     }
+  }
+
+  protected GameEngine getEngine() {
+    return this.engine;
   }
 }
 

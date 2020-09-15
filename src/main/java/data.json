@@ -9,7 +9,7 @@
     "Ikenberry Commons": {
       "description": "You are at the north entry of the Ikenberry Commons, near Wassaja Hall. There seems to be no student in sight. Weird.",
       "items": {
-        "Dining Hall Key": {
+        "dining hall key": {
           "name": "Dining Hall Key",
           "description":"You pick up a silver key used to unlock the Ikenberry Dining Hall."
         }
@@ -22,7 +22,7 @@
     "The Ike": {
       "description": "You are at the Ike, a hub for all Ikenberry activities.",
       "items": {
-        "Blood-Stained iCard": {
+        "blood-stained icard": {
           "name": "Blood-Stained iCard",
           "description":"WHAT! You pick up your best friend's iCard with blood stains. He's from Wassaja Hall. You should check this out."
         }

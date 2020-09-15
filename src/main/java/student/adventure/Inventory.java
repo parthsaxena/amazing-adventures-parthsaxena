@@ -1,69 +1,85 @@
 package student.adventure;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import student.adventure.Objects.*;
 
 public class Inventory {
-  private Map<Item, Integer> inventory;
+  private Map<String, Item> inventory;
 
+  /**
+   * Constructor to instantiate Inventory
+   */
   Inventory() {
     this.inventory = new HashMap<>();
   }
 
+  /**
+   * Adds the given item to Player's inventory and removes it from the room
+   *
+   * @param argument
+   * @param currentRoom
+   * @return
+   */
   public Result takeItem(String argument, Room currentRoom) {
-    Set<String> itemSet = currentRoom.getItems().keySet();
-    for (String item : itemSet) {
-      if (argument.equals(item.toLowerCase())) {
-        Item itemObject = currentRoom.getItems().get(item);
-        // Increase the frequency of this item in inventory
-        inventory.put(itemObject, inventory.getOrDefault(item, 0) + 1);
+    argument = argument.toLowerCase();
 
-        // Remove item from the room's items
-        currentRoom.getItems().remove(itemObject.getName());
-        return new Result(itemObject.getDescription(), true);
-      }
+    if (currentRoom.getItems().containsKey(argument)) {
+      Item itemObject = currentRoom.getItems().get(argument);
+
+      // Add this item to inventory
+      inventory.put(itemObject.getName().toLowerCase(), itemObject);
+
+      // Remove item from the room's items
+      currentRoom.getItems().remove(argument);
+      return new Result(itemObject.getDescription(), true);
     }
+
     return new Result("There is no item \"" + argument + "\" in the room!", false);
   }
 
+  /**
+   * Removes the given item from inventory and adds it to the room
+   *
+   * @param argument
+   * @param currentRoom
+   * @return
+   */
   public Result dropItem(String argument, Room currentRoom) {
-    Set<String> itemSet = currentRoom.getItems().keySet();
-    for (String item : itemSet) {
-      if (argument.equals(item.toLowerCase())) {
-        return new Result("The item \"" + item +"\" is already in this room!", false);
-      }
+    argument = argument.toLowerCase();
+    // Check if player has this item
+    if (!inventory.containsKey(argument)) {
+      return new Result("You do not have \"" + argument + "\" in your inventory!", false);
+    }
+    // Check if room already has this item
+    if (currentRoom.getItems().containsKey(argument)) {
+      return new Result("The item \"" + argument + "\" is already in this room!", false);
     }
 
-    Set<Item> inventorySet = inventory.keySet();
-    for (Item item : inventorySet) {
-      if (argument.equals(item.getName().toLowerCase())) {
-        // Decrease frequency of this item in inventory or remove it entirely
-        if (inventory.get(item) > 1) {
-          inventory.put(item, inventory.get(item) - 1);
-        } else {
-          inventory.remove(item);
-        }
-        // Add item to current room's items
-        currentRoom.getItems().put(item.getName(), item);
-        return new Result("", true);
-      }
-    }
-    return new Result("You do not have \"" + argument + "\" in your inventory!", false);
+    Item item = inventory.get(argument);
+    inventory.remove(argument);
+    currentRoom.getItems().put(argument, item);
+
+    return new Result("", true);
   }
 
+  /**
+   * Returns a description of the given Item in inventory
+   *
+   * @param argument
+   * @return
+   */
   public Result inspectItem(String argument) {
-    Set<Item> inventorySet = inventory.keySet();
-    for (Item item : inventorySet) {
-      if (argument.equals(item.getName().toLowerCase())) {
-        return new Result(item.getDescription(), true);
-      }
+    argument = argument.toLowerCase();
+    // Check if player has this item
+    if (!inventory.containsKey(argument)) {
+      return new Result("You do not have \"" + argument + "\" in your inventory!", false);
     }
-    return new Result("You do not have \"" + argument + "\" in your inventory!", false);
+    return new Result(inventory.get(argument).getDescription(), true);
   }
 
-  public Set<Item> getInventorySet() {
-    return inventory.keySet();
+  public Collection<Item> getInventorySet() {
+    return inventory.values();
   }
 }

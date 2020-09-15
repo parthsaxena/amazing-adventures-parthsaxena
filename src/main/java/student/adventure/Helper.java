@@ -18,7 +18,10 @@ public class Helper {
 
     if (type == StringList.ITEMS) {
       stringList = "Items visible: ";
-      keySet = engine.getCurrentRoom().getItems().keySet();
+      keySet = new HashSet<>();
+      for (Item key : engine.getCurrentRoom().getItems().values()) {
+        keySet.add(key.getName());
+      }
       if (keySet.size() == 0) {
         return "There are no items here.";
       }
@@ -32,7 +35,6 @@ public class Helper {
         return "You currently have no items.";
       }
     }
-
     // Add items in list to String
     for (String key : keySet) {
       stringList += key + ", ";
