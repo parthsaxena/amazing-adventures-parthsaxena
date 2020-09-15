@@ -11,7 +11,7 @@
       "items": {
         "Dining Hall Key": {
           "name": "Dining Hall Key",
-          "description":"A silver key used to unlock the Ikenberry Dining Hall."
+          "description":"You pick up a silver key used to unlock the Ikenberry Dining Hall."
         }
       },
       "directions": {
@@ -24,7 +24,7 @@
       "items": {
         "Blood-Stained iCard": {
           "name": "Blood-Stained iCard",
-          "description":"An iCard with blood stains belonging to someone named Matthew."
+          "description":"WHAT! You pick up your best friend's iCard with blood stains. He's from Wassaja Hall. You should check this out."
         }
       },
       "directions": {

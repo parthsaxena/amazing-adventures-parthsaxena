@@ -3,15 +3,11 @@ package student.adventure;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
-import java.util.Set;
 import student.adventure.Objects.*;
 
 interface Action {
@@ -27,6 +23,12 @@ public class IO {
 
   private Map<String, Action> actionMap;
 
+  /**
+   * Constructor to load JSON game data from the given path
+   *
+   * @param path
+   * @throws IOException
+   */
   public IO(Path path) throws IOException {
     gson = new Gson();
     scanner = new Scanner(System.in);
@@ -38,6 +40,10 @@ public class IO {
     populateActionMap();
   }
 
+  /**
+   * Populates a HashMap that relates a String action to a function that
+   * handles that action
+   */
   private void populateActionMap() {
     actionMap = new HashMap<>();
     actionMap.put("go", new Action() {
@@ -85,6 +91,9 @@ public class IO {
     });
   }
 
+  /**
+   * Begins the game with preliminary output
+   */
   public void start() {
     System.out.println(data.getConfiguration().getInitializationText() + "\n");
 
@@ -130,15 +139,19 @@ public class IO {
    */
   private void dissectCommand(String command) {
     command = command.toLowerCase().trim();
+    int firstArgIndex = command.indexOf(' ');
 
+    String action = "";
     String argument = "";
-    String[] args = command.split(" ");
-    if (args.length >= 2) {
-      argument = args[1];
+    if (firstArgIndex == -1) {
+      action = command;
+    } else {
+      action = command.substring(0, firstArgIndex);
+      argument = command.substring(firstArgIndex).trim();
     }
 
-    if (actionMap.containsKey(args[0])) {
-      actionMap.get(args[0]).performAction(argument);
+    if (actionMap.containsKey(action)) {
+      actionMap.get(action).performAction(argument);
     } else {
       handleInvalidCommand(command);
     }
@@ -150,11 +163,8 @@ public class IO {
    * @param argument
    */
   private void handleTakeAction(String argument) {
-    String message = engine.takeItem(argument);
-    if (message != null) {
-      System.out.println(message);
-    }
-
+    Result res = engine.takeItem(argument);
+    System.out.println(res.getMessage());
     prompt();
   }
 
@@ -164,9 +174,9 @@ public class IO {
    * @param argument
    */
   private void handleDropAction(String argument) {
-    String message = engine.dropItem(argument);
-    if (message != null) {
-      System.out.println(message);
+    Result res = engine.dropItem(argument);
+    if (!res.isSuccessful()) {
+      System.out.println(res.getMessage());
     }
 
     prompt();

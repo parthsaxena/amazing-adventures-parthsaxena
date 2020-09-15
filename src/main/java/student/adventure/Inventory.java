@@ -12,7 +12,7 @@ public class Inventory {
     this.inventory = new HashMap<>();
   }
 
-  public String takeItem(String argument, Room currentRoom) {
+  public Result takeItem(String argument, Room currentRoom) {
     Set<String> itemSet = currentRoom.getItems().keySet();
     for (String item : itemSet) {
       if (argument.equals(item.toLowerCase())) {
@@ -22,17 +22,17 @@ public class Inventory {
 
         // Remove item from the room's items
         currentRoom.getItems().remove(itemObject.getName());
-        return null;
+        return new Result(itemObject.getDescription(), true);
       }
     }
-    return "There is no item \"" + argument + "\" in the room!";
+    return new Result("There is no item \"" + argument + "\" in the room!", false);
   }
 
-  public String dropItem(String argument, Room currentRoom) {
+  public Result dropItem(String argument, Room currentRoom) {
     Set<String> itemSet = currentRoom.getItems().keySet();
     for (String item : itemSet) {
       if (argument.equals(item.toLowerCase())) {
-        return "The item \"" + item +"\" is already in this room!";
+        return new Result("The item \"" + item +"\" is already in this room!", false);
       }
     }
 
@@ -47,10 +47,10 @@ public class Inventory {
         }
         // Add item to current room's items
         currentRoom.getItems().put(item.getName(), item);
-        return null;
+        return new Result("", true);
       }
     }
-    return "You do not have \"" + argument + "\" in your inventory!";
+    return new Result("You do not have \"" + argument + "\" in your inventory!", false);
   }
 
   public Set<Item> getInventorySet() {

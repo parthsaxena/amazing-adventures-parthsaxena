@@ -64,11 +64,11 @@ public class GameEngine {
     return this.player;
   }
 
-  public String takeItem(String argument) {
+  public Result takeItem(String argument) {
     return this.player.getInventory().takeItem(argument, currentRoom);
   }
 
-  public String dropItem(String argument) {
+  public Result dropItem(String argument) {
     return this.player.getInventory().dropItem(argument, currentRoom);
   }
 }
