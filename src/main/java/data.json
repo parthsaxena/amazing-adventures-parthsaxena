@@ -31,6 +31,16 @@
         "North": "Ikenberry Dining Hall",
         "West": "Ikenberry Commons"
       }
+    },
+    "Ikenberry Dining Hall": {
+      "description": "You are at the south entry of the Ike Dining Hall. The room's a mess and there's a rotten smell coming from the kitchen.",
+      "items": {
+
+      },
+      "directions": {
+        "South": "The Ike",
+        "North": "Dining Hall Kitchen"
+      }
     }
   }
 }

@@ -2,6 +2,7 @@ package student.adventure;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import student.adventure.Objects.*;
 
 public class GameEngine {
@@ -9,7 +10,7 @@ public class GameEngine {
   private Map<String, Room> rooms;
   private Configuration configuration;
   private Room currentRoom;
-  private Map<Item, Integer> inventory;
+  private Player player;
 
   /**
    * Constructor to instantiate the Game Engine
@@ -20,37 +21,31 @@ public class GameEngine {
   GameEngine(Map<String, Room> rooms, Configuration configuration) {
     this.rooms = rooms;
     this.configuration = configuration;
-    this.inventory = new HashMap<>();
+    this.player = new Player();
 
     String currentRoomKey = configuration.getStartingRoom();
     this.currentRoom = rooms.get(currentRoomKey);
   }
 
-  public void changeDirection(Direction direction) {
-    String roomKey = currentRoom.getDirections().get(direction.getKey());
-    Room room = rooms.get(roomKey);
-
-    this.currentRoom = room;
-  }
-
-  public void takeItem(Item item) {
-    // Increase the frequency of this item in inventory
-    inventory.put(item, inventory.getOrDefault(item, 0) + 1);
-
-    // Remove item from the room's items
-    currentRoom.getItems().remove(item.getName());
-  }
-
-  public void dropItem(Item item) {
-    // Decrease frequency of this item in inventory or remove it entirely
-    if (inventory.get(item) > 1) {
-      inventory.put(item, inventory.get(item) - 1);
-    } else {
-      inventory.remove(item);
+  public String changeDirection(String argument) {
+    Direction direction;
+    try {
+      direction = Direction.valueOf(argument.toUpperCase());
+    } catch (IllegalArgumentException e) {
+      return "You can't go \"" + argument + "\"!";
     }
 
-    // Add item to current room's items
-    currentRoom.getItems().put(item.getName(), item);
+    Set<String> directionSet = this.currentRoom.getDirections().keySet();
+    for (String validDirection : directionSet) {
+      if (validDirection.equals(direction.getKey())) {
+        String roomKey = currentRoom.getDirections().get(direction.getKey());
+        Room room = rooms.get(roomKey);
+        this.currentRoom = room;
+
+        return null;
+      }
+    }
+    return "You can't go \"" + direction.getKey() + "\"!";
   }
 
   public Map<String, Room> getRooms() {
@@ -65,7 +60,15 @@ public class GameEngine {
     return currentRoom;
   }
 
-  public Map<Item, Integer> getInventory() {
-    return inventory;
+  public Player getPlayer() {
+    return this.player;
+  }
+
+  public String takeItem(String argument) {
+    return this.player.getInventory().takeItem(argument, currentRoom);
+  }
+
+  public String dropItem(String argument) {
+    return this.player.getInventory().dropItem(argument, currentRoom);
   }
 }

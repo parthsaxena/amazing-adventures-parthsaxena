@@ -6,11 +6,17 @@ import java.io.Reader;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
 import student.adventure.Objects.*;
+
+interface Action {
+  void performAction(String argument);
+}
 
 public class IO {
 
@@ -19,6 +25,8 @@ public class IO {
   private Data data;
   private final Scanner scanner;
 
+  private Map<String, Action> actionMap;
+
   public IO(Path path) throws IOException {
     gson = new Gson();
     scanner = new Scanner(System.in);
@@ -26,6 +34,55 @@ public class IO {
     Reader reader = Files.newBufferedReader(path);
     Data data = gson.fromJson(reader, Data.class);
     sanitizeData(data);
+
+    populateActionMap();
+  }
+
+  private void populateActionMap() {
+    actionMap = new HashMap<>();
+    actionMap.put("go", new Action() {
+      public void performAction(String argument) {
+        handleGoCommand(argument);
+      }
+    });
+    actionMap.put("take", new Action() {
+      public void performAction(String argument) {
+        handleTakeAction(argument);
+      }
+    });
+    actionMap.put("drop", new Action() {
+      public void performAction(String argument) {
+        handleDropAction(argument);
+      }
+    });
+    actionMap.put("exit", new Action() {
+      public void performAction(String argument) {
+        System.exit(0);
+      }
+    });
+    actionMap.put("quit", new Action() {
+      public void performAction(String argument) {
+        System.exit(0);
+      }
+    });
+    actionMap.put("take", new Action() {
+      public void performAction(String argument) {
+        handleTakeAction(argument);
+      }
+    });
+    actionMap.put("inventory", new Action() {
+      @Override
+      public void performAction(String argument) {
+        System.out.println(Helper.buildStringFromList(StringList.INVENTORY, engine));
+        prompt();
+      }
+    });
+    actionMap.put("examine", new Action() {
+      @Override
+      public void performAction(String argument) {
+        examine();
+      }
+    });
   }
 
   public void start() {
@@ -46,17 +103,17 @@ public class IO {
     System.out.println(engine.getCurrentRoom().getDescription());
 
     // Print directions guide
-    System.out.println(buildStringFromList(StringList.DIRECTIONS));
+    System.out.println(Helper.buildStringFromList(StringList.DIRECTIONS, engine));
 
     // Print items guide
-    System.out.println(buildStringFromList(StringList.ITEMS));
+    System.out.println(Helper.buildStringFromList(StringList.ITEMS, engine));
 
     // Prompt user for input
     prompt();
   }
 
   /**
-   * Prompts the user to input a command*
+   * Prompts the user to input a command
    */
   private void prompt() {
     System.out.print("> ");
@@ -66,101 +123,52 @@ public class IO {
     dissectCommand(command);
   }
 
+  /**
+   * Dissects action and arguments from inputted command
+   *
+   * @param command
+   */
   private void dissectCommand(String command) {
     command = command.toLowerCase().trim();
-    if (command == "exit" || command == "quit") {
-      System.exit(0);
-    }
 
-    String action = "";
     String argument = "";
-    int i;
-    for (i = 0; i < command.length(); i++) {
-      if (command.charAt(i) == ' ') {
-        action = command.substring(0, i).trim();
-        argument = command.substring(i).trim();
-        break;
-      }
+    String[] args = command.split(" ");
+    if (args.length >= 2) {
+      argument = args[1];
     }
 
-    if (action.length() == 0 || argument.length() == 0) {
-      handleInvalidCommand(command);
+    if (actionMap.containsKey(args[0])) {
+      actionMap.get(args[0]).performAction(argument);
     } else {
-      handleCommand(command, action, argument);
+      handleInvalidCommand(command);
     }
   }
 
   /**
-   * Parses action and argument of command
+   * I/O management to parse and perform "take" action
    *
-   * @param command
-   * @param action
    * @param argument
    */
-  private void handleCommand(String command, String action, String argument) {
-    if (action.equals("go")) {
-      handleGoAction(argument);
-    } else if (action.equals("take")) {
-      handleTakeAction(argument);
-    } else if (action.equals("drop")) {
-      handleDropAction(argument);
-    }
-    handleInvalidCommand(command);
-  }
-
-  private void handleGoAction(String argument) {
-    Set<String> directionSet = engine.getCurrentRoom().getDirections().keySet();
-    for (String direction : directionSet) {
-      if (argument.equals(direction.toLowerCase())) {
-        changeDirection(direction);
-        return;
-      }
-    }
-    System.out.println("You can't go \"" + argument + "\"!");
-    prompt();
-  }
-
   private void handleTakeAction(String argument) {
-    Set<String> itemSet = engine.getCurrentRoom().getItems().keySet();
-    for (String item : itemSet) {
-      if (argument.equals(item.toLowerCase())) {
-        Item itemObject = engine.getCurrentRoom().getItems().get(item);
-        engine.takeItem(itemObject);
-        prompt();
-        return;
-      }
+    String message = engine.takeItem(argument);
+    if (message != null) {
+      System.out.println(message);
     }
 
-    System.out.println("There is no item \"" + argument + "\" in the room!");
     prompt();
   }
 
+  /**
+   * I/O management to parse and perform "drop" action
+   *
+   * @param argument
+   */
   private void handleDropAction(String argument) {
-    Item itemToDrop = null;
-    Set<Item> inventorySet = engine.getInventory().keySet();
-    for (Item item : inventorySet) {
-      if (argument.equals(item.getName().toLowerCase())) {
-        itemToDrop = item;
-        break;
-      }
+    String message = engine.dropItem(argument);
+    if (message != null) {
+      System.out.println(message);
     }
 
-    if (itemToDrop == null) {
-      System.out.println("You do not have \"" + argument + "\" in your inventory!");
-      prompt();
-      return;
-    }
-
-    Set<String> itemSet = engine.getCurrentRoom().getItems().keySet();
-    for (String item : itemSet) {
-      if (argument.equals(item.toLowerCase())) {
-        System.out.println("The item \"" + item +"\" is already in this room!");
-        prompt();
-        return;
-      }
-    }
-
-    engine.dropItem(itemToDrop);
     prompt();
   }
 
@@ -175,39 +183,19 @@ public class IO {
   }
 
   /**
-   * Generates an Enum value from the String direction and passes
-   * it along to GameEngine
+   * I/O management to parse and perform "go" action
    *
    * @param direction
    */
-  private void changeDirection(String direction) {
-    Direction directionEnum = Direction.valueOf(direction.toUpperCase());
-    engine.changeDirection(directionEnum);
-
-    examine();
-  }
-
-  /**
-   * Converts a list to a pretty-print String for I/O
-   *
-   * @param type the type of list to convert
-   * @return String
-   */
-  private String buildStringFromList(StringList type) {
-    String stringList = "From here, you can go: ";
-    Set<String> keySet = engine.getCurrentRoom().getDirections().keySet();
-
-    if (type == StringList.ITEMS) {
-      stringList = "Items visible: ";
-      keySet = engine.getCurrentRoom().getItems().keySet();
-    }
-    // Add items in list to String
-    for (String key : keySet) {
-      stringList += key + ", ";
+  private void handleGoCommand(String direction) {
+    String message = engine.changeDirection(direction);
+    if (message != null) {
+      System.out.println(message);
+    } else {
+      examine();
     }
 
-    // Cut off the last two characters because of extra comma
-    return stringList.substring(0, stringList.length()-2);
+    prompt();
   }
 
   /**
@@ -217,29 +205,16 @@ public class IO {
    */
   private void sanitizeData(Data data) {
     try {
-
-      checkNull(data);
+      Helper.checkNull(data);
       this.data = data;
-
     } catch(Exception e) {
       throw new IllegalArgumentException("Input JSON has invalid schema / data.");
-    }
-  }
-
-  /**
-   * Helper method that throws an Exception if given object is null
-   *
-   * @param o
-   * @throws Exception
-   */
-  private void checkNull(Object o) throws Exception {
-    if (o == null) {
-      throw new Exception();
     }
   }
 }
 
 enum StringList {
   DIRECTIONS,
-  ITEMS
+  ITEMS,
+  INVENTORY
 }
