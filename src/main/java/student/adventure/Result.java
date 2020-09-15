@@ -1,19 +1,24 @@
 package student.adventure;
 
+enum State {
+  SUCCESS,
+  FAILURE
+}
+
 public class Result {
   private String message;
-  private boolean successful;
+  private State state;
 
-  Result(String message, boolean successful) {
+  Result(String message, State state) {
     this.message = message;
-    this.successful = successful;
+    this.state = state;
   }
 
   public String getMessage() {
     return message;
   }
 
-  public boolean isSuccessful() {
-    return successful;
+  public State getState() {
+    return state;
   }
 }

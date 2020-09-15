@@ -12,6 +12,5 @@ public class Main {
         Path path = Paths.get("src/main/java/data.json");
         IO manager = new IO(path);
         manager.start();
-
     }
 }

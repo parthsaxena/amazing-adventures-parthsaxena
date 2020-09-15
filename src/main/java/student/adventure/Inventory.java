@@ -33,10 +33,10 @@ public class Inventory {
 
       // Remove item from the room's items
       currentRoom.getItems().remove(argument);
-      return new Result(itemObject.getDescription(), true);
+      return new Result(itemObject.getDescription(), State.SUCCESS);
     }
 
-    return new Result("There is no item \"" + argument + "\" in the room!", false);
+    return new Result("There is no item \"" + argument + "\" in the room!", State.FAILURE);
   }
 
   /**
@@ -49,19 +49,19 @@ public class Inventory {
   public Result dropItem(String argument, Room currentRoom) {
     argument = argument.toLowerCase();
     // Check if player has this item
-    if (!inventory.containsKey(argument)) {
-      return new Result("You do not have \"" + argument + "\" in your inventory!", false);
+    if (!hasItem(argument)) {
+      return new Result("You do not have \"" + argument + "\" in your inventory!", State.FAILURE);
     }
     // Check if room already has this item
     if (currentRoom.getItems().containsKey(argument)) {
-      return new Result("The item \"" + argument + "\" is already in this room!", false);
+      return new Result("The item \"" + argument + "\" is already in this room!", State.FAILURE);
     }
 
     Item item = inventory.get(argument);
     inventory.remove(argument);
     currentRoom.getItems().put(argument, item);
 
-    return new Result("", true);
+    return new Result("", State.FAILURE);
   }
 
   /**
@@ -73,10 +73,30 @@ public class Inventory {
   public Result inspectItem(String argument) {
     argument = argument.toLowerCase();
     // Check if player has this item
-    if (!inventory.containsKey(argument)) {
-      return new Result("You do not have \"" + argument + "\" in your inventory!", false);
+    if (!hasItem(argument)) {
+      return new Result("You do not have \"" + argument + "\" in your inventory!", State.FAILURE);
     }
-    return new Result(inventory.get(argument).getDescription(), true);
+    return new Result(inventory.get(argument).getDescription(), State.FAILURE);
+  }
+
+  /**
+   * Checks if inventory contains the given item
+   *
+   * @param argument
+   * @return
+   */
+  public boolean hasItem(String argument) {
+    return this.inventory.containsKey(argument.toLowerCase());
+  }
+
+  /**
+   * Returns an item in the inventory
+   *
+   * @param argument
+   * @return Item object
+   */
+  public Item getItem(String argument) {
+    return inventory.getOrDefault(argument, null);
   }
 
   public Collection<Item> getInventorySet() {

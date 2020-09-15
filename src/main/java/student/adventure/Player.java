@@ -8,6 +8,7 @@ public class Player {
 
   Player() {
     inventory = new Inventory();
+    money = 0F;
   }
 
   public Inventory getInventory() {
@@ -16,5 +17,13 @@ public class Player {
 
   public Float getMoney() {
     return money;
+  }
+
+  public void addMoney(Float add) {
+    this.money += add;
+  }
+
+  public void subtractMoney(Float subtract) {
+    this.money -= subtract;
   }
 }

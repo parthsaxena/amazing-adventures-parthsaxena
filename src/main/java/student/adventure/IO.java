@@ -94,6 +94,24 @@ public class IO {
         handleInspectCommand(argument);
       }
     });
+    actionMap.put("buy", new Action() {
+      @Override
+      public void performAction(String argument) {
+        handleBuyCommand(argument);
+      }
+    });
+    actionMap.put("sell", new Action() {
+      @Override
+      public void performAction(String argument) {
+        handleSellCommand(argument);
+      }
+    });
+    actionMap.put("money", new Action() {
+      @Override
+      public void performAction(String argument) {
+        handleMoneyAction(argument);
+      }
+    });
   }
 
   /**
@@ -191,9 +209,17 @@ public class IO {
    */
   private Result handleDropAction(String argument) {
     Result res = engine.dropItem(argument);
-    if (!res.isSuccessful()) {
+    if (res.getState() == State.FAILURE) {
       System.out.println(res.getMessage());
     }
+
+    prompt();
+    return res;
+  }
+
+  private Result handleMoneyAction(String argument) {
+    Result res = engine.getMoney();
+    System.out.println(res.getMessage());
 
     prompt();
     return res;
@@ -214,15 +240,16 @@ public class IO {
    *
    * @param direction
    */
-  private void handleGoCommand(String direction) {
+  private Result handleGoCommand(String direction) {
     Result res = engine.changeDirection(direction);
-    if (!res.isSuccessful()) {
+    if (res.getState() == State.FAILURE) {
       System.out.println(res.getMessage());
     } else {
       examine();
     }
 
     prompt();
+    return res;
   }
 
   /**
@@ -230,11 +257,38 @@ public class IO {
    *
    * @param argument
    */
-  private void handleInspectCommand(String argument) {
+  private Result handleInspectCommand(String argument) {
     Result res = engine.inspectItem(argument);
     System.out.println(res.getMessage());
 
     prompt();
+    return res;
+  }
+
+  /**
+   * I/O management to parse and perform "sell" action
+   *
+   * @param argument
+   */
+  private Result handleSellCommand(String argument) {
+    Result res = engine.sellItem(argument);
+    System.out.println(res.getMessage());
+
+    prompt();
+    return res;
+  }
+
+  /**
+   * I/O management to parse and perform "buy" action
+   *
+   * @param argument
+   */
+  private Result handleBuyCommand(String argument) {
+    Result res = engine.buyItem(argument);
+    System.out.println(res.getMessage());
+
+    prompt();
+    return res;
   }
 
   /**

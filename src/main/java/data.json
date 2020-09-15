@@ -7,11 +7,13 @@
   },
   "Rooms":{
     "Ikenberry Commons": {
+      "type": "room",
       "description": "You are at the north entry of the Ikenberry Commons, near Wassaja Hall. There seems to be no student in sight. Weird.",
       "items": {
         "dining hall key": {
           "name": "Dining Hall Key",
-          "description":"You pick up a silver key used to unlock the Ikenberry Dining Hall."
+          "description":"You pick up a silver key used to unlock the Ikenberry Dining Hall.",
+          "value": 10
         }
       },
       "directions": {
@@ -20,19 +22,19 @@
       }
     },
     "The Ike": {
+      "type": "room",
       "description": "You are at the Ike, a hub for all Ikenberry activities.",
       "items": {
-        "blood-stained icard": {
-          "name": "Blood-Stained iCard",
-          "description":"WHAT! You pick up your best friend's iCard with blood stains. He's from Wassaja Hall. You should check this out."
-        }
+
       },
       "directions": {
         "North": "Ikenberry Dining Hall",
-        "West": "Ikenberry Commons"
+        "West": "Ikenberry Commons",
+        "East": "Vending Machine"
       }
     },
     "Ikenberry Dining Hall": {
+      "type": "room",
       "description": "You are at the south entry of the Ike Dining Hall. The room's a mess and there's a rotten smell coming from the kitchen.",
       "items": {
 
@@ -40,6 +42,20 @@
       "directions": {
         "South": "The Ike",
         "North": "Dining Hall Kitchen"
+      }
+    },
+    "Vending Machine": {
+      "type":"store",
+      "description": "You find yourself at vending machine that allows you to sell items for cash. Try the \"sell\" and \"valueof\" command.",
+      "items": {
+        "blood-stained wassaja icard": {
+          "name": "Blood-Stained Wassaja iCard",
+          "description": "WHAT! It's your best friend's iCard with blood stains. He's from Wassaja Hall. You should check this out.",
+          "value": 100
+        }
+      },
+      "directions": {
+        "West": "The Ike"
       }
     }
   }

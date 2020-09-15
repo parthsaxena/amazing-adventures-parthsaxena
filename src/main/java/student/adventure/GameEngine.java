@@ -53,7 +53,7 @@ public class GameEngine {
     try {
       direction = Direction.valueOf(argument.toUpperCase());
     } catch (IllegalArgumentException e) {
-      return new Result("You can't go \"" + argument + "\"!", false);
+      return new Result("You can't go \"" + argument + "\"!", State.FAILURE);
     }
 
     Set<String> directionSet = this.currentRoom.getDirections().keySet();
@@ -62,9 +62,9 @@ public class GameEngine {
       Room room = rooms.get(roomKey);
       this.currentRoom = room;
 
-      return new Result("", true);
+      return new Result("", State.SUCCESS);
     } else {
-      return new Result("You can't go \"" + direction.getKey() + "\"!", false);
+      return new Result("You can't go \"" + direction.getKey() + "\"!", State.SUCCESS);
     }
   }
 
@@ -75,6 +75,10 @@ public class GameEngine {
    * @return
    */
   public Result takeItem(String argument) {
+    if (currentRoom.getType().equals("store")) {
+      return new Result("You must purchase this item!", State.FAILURE);
+    }
+
     return this.player.getInventory().takeItem(argument, currentRoom);
   }
 
@@ -96,6 +100,67 @@ public class GameEngine {
    */
   public Result inspectItem(String argument) {
     return this.player.getInventory().inspectItem(argument);
+  }
+
+  /**
+   * Sells the given item from the Player's inventory
+   *
+   * @param argument
+   * @return
+   */
+  public Result sellItem(String argument) {
+    // Check if current room is of type 'store'
+    if (!currentRoom.getType().equals("store")) {
+      return new Result("You must be a in a store to sell items!", State.FAILURE);
+    }
+    // Check if player has this item
+    if (!player.getInventory().hasItem(argument)) {
+      return new Result("You do not have \"" + argument + "\" in your inventory!", State.FAILURE);
+    }
+    // Give money to Player
+    Item toSell = player.getInventory().getItem(argument);
+    player.addMoney(toSell.getValue());
+    // "Drop" item into store
+    this.dropItem(toSell.getName());
+
+    return new Result("Transaction successful!", State.SUCCESS);
+  }
+
+  /**
+   * Purchases the item from the store into the Player's inventory
+   *
+   * @param argument
+   * @return
+   */
+  public Result buyItem(String argument) {
+    // Check if current room is of type 'store'
+    if (!currentRoom.getType().equals("store")) {
+      return new Result("You must be a in a store to buy items!", State.FAILURE);
+    }
+    // Check if store has this item in stock
+    if (!currentRoom.getItems().containsKey(argument.toLowerCase())) {
+      return new Result("\"" + argument + "\" is not for sale!", State.FAILURE);
+    }
+    // Take money from Player
+    Item toBuy = currentRoom.getItems().get(argument.toLowerCase());
+    // Check if player has enough money
+    if (player.getMoney() < toBuy.getValue()) {
+      return new Result("You don't have enough money!", State.FAILURE);
+    }
+    player.subtractMoney(toBuy.getValue());
+    // "Give" item to Player's inventory
+    this.player.getInventory().takeItem(argument, currentRoom);
+
+    return new Result("Transaction successful!", State.SUCCESS);
+  }
+
+  /**
+   * Returns a Result including the Player's current money
+   *
+   * @return
+   */
+  public Result getMoney() {
+    return new Result("You have $" + player.getMoney() + ".", State.SUCCESS);
   }
 
   public Map<String, Room> getRooms() {
