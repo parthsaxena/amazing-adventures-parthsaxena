@@ -53,6 +53,16 @@ public class Inventory {
     return new Result("You do not have \"" + argument + "\" in your inventory!", false);
   }
 
+  public Result inspectItem(String argument) {
+    Set<Item> inventorySet = inventory.keySet();
+    for (Item item : inventorySet) {
+      if (argument.equals(item.getName().toLowerCase())) {
+        return new Result(item.getDescription(), true);
+      }
+    }
+    return new Result("You do not have \"" + argument + "\" in your inventory!", false);
+  }
+
   public Set<Item> getInventorySet() {
     return inventory.keySet();
   }

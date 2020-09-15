@@ -71,4 +71,8 @@ public class GameEngine {
   public Result dropItem(String argument) {
     return this.player.getInventory().dropItem(argument, currentRoom);
   }
+
+  public Result inspectItem(String argument) {
+    return this.player.getInventory().inspectItem(argument);
+  }
 }

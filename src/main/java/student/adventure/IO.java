@@ -89,6 +89,12 @@ public class IO {
         examine();
       }
     });
+    actionMap.put("inspect", new Action() {
+      @Override
+      public void performAction(String argument) {
+        handleInspectCommand(argument);
+      }
+    });
   }
 
   /**
@@ -204,6 +210,18 @@ public class IO {
     } else {
       examine();
     }
+
+    prompt();
+  }
+
+  /**
+   * I/O management to parse and perform "inspect" action
+   *
+   * @param argument
+   */
+  private void handleInspectCommand(String argument) {
+    Result res = engine.inspectItem(argument);
+    System.out.println(res.getMessage());
 
     prompt();
   }
