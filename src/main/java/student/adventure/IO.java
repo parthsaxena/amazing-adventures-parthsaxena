@@ -47,7 +47,7 @@ public class IO {
     actionMap = new HashMap<>();
     actionMap.put("go", new Action() {
       public void performAction(String argument) {
-        handleGoCommand(argument);
+        handleGoAction(argument);
       }
     });
     actionMap.put("take", new Action() {
@@ -91,19 +91,19 @@ public class IO {
     actionMap.put("inspect", new Action() {
       @Override
       public void performAction(String argument) {
-        handleInspectCommand(argument);
+        handleInspectAction(argument);
       }
     });
     actionMap.put("buy", new Action() {
       @Override
       public void performAction(String argument) {
-        handleBuyCommand(argument);
+        handleBuyAction(argument);
       }
     });
     actionMap.put("sell", new Action() {
       @Override
       public void performAction(String argument) {
-        handleSellCommand(argument);
+        handleSellAction(argument);
       }
     });
     actionMap.put("money", new Action() {
@@ -217,6 +217,12 @@ public class IO {
     return res;
   }
 
+  /**
+   * I/O management to parse and perform "money" action
+   *
+   * @param argument
+   * @return
+   */
   private Result handleMoneyAction(String argument) {
     Result res = engine.getMoney();
     System.out.println(res.getMessage());
@@ -226,21 +232,11 @@ public class IO {
   }
 
   /**
-   * Handles case of invalid command entered by user
-   *
-   * @param command
-   */
-  private void handleInvalidCommand(String command) {
-    System.out.println("I don't quite understand \"" + command + "\"!");
-    prompt();
-  }
-
-  /**
    * I/O management to parse and perform "go" action
    *
    * @param direction
    */
-  private Result handleGoCommand(String direction) {
+  private Result handleGoAction(String direction) {
     Result res = engine.changeDirection(direction);
     if (res.getState() == State.FAILURE) {
       System.out.println(res.getMessage());
@@ -257,7 +253,7 @@ public class IO {
    *
    * @param argument
    */
-  private Result handleInspectCommand(String argument) {
+  private Result handleInspectAction(String argument) {
     Result res = engine.inspectItem(argument);
     System.out.println(res.getMessage());
 
@@ -270,7 +266,7 @@ public class IO {
    *
    * @param argument
    */
-  private Result handleSellCommand(String argument) {
+  private Result handleSellAction(String argument) {
     Result res = engine.sellItem(argument);
     System.out.println(res.getMessage());
 
@@ -283,12 +279,22 @@ public class IO {
    *
    * @param argument
    */
-  private Result handleBuyCommand(String argument) {
+  private Result handleBuyAction(String argument) {
     Result res = engine.buyItem(argument);
     System.out.println(res.getMessage());
 
     prompt();
     return res;
+  }
+
+  /**
+   * Handles case of invalid command entered by user
+   *
+   * @param command
+   */
+  private void handleInvalidCommand(String command) {
+    System.out.println("I don't quite understand \"" + command + "\"!");
+    prompt();
   }
 
   /**

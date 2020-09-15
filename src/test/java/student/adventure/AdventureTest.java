@@ -45,4 +45,29 @@ public class AdventureTest {
         engine.takeItem("blOOd-sTained iCARd");
         assertEquals(1, engine.getPlayer().getInventory().getInventorySet().size());
     }
+
+    @Test
+    public void validateBuyAction() throws IOException {
+        Path path = Paths.get("src/main/java/data.json");
+        IO manager = new IO(path);
+        manager.start("Vending Machine");
+
+        GameEngine engine = manager.getEngine();
+        engine.getPlayer().addMoney(100F);
+        engine.buyItem("Blood-Stained Wassaja iCard");
+        assertEquals(0.0, engine.getPlayer().getMoney().doubleValue(), 0.01);
+    }
+
+    @Test
+    public void validateSellAction() throws IOException {
+        Path path = Paths.get("src/main/java/data.json");
+        IO manager = new IO(path);
+        manager.start("Vending Machine");
+
+        GameEngine engine = manager.getEngine();
+        engine.getPlayer().addMoney(110F);
+        engine.buyItem("Blood-Stained Wassaja iCard");
+        engine.buyItem("Blood-Stained Wassaja iCard");
+        assertEquals(10.0, engine.getPlayer().getMoney().doubleValue(), 0.01);
+    }
 }
