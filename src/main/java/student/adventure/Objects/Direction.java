@@ -1,25 +1,25 @@
 package student.adventure.Objects;
 
 public enum Direction {
-  NORTH{
+  NORTH {
     @Override
     public String getKey() {
       return "North";
     }
   },
-  SOUTH{
+  SOUTH {
     @Override
     public String getKey() {
       return "South";
     }
   },
-  EAST{
+  EAST {
     @Override
     public String getKey() {
       return "East";
     }
   },
-  WEST{
+  WEST {
     @Override
     public String getKey() {
       return "West";

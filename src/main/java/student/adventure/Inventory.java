@@ -3,9 +3,11 @@ package student.adventure;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import student.adventure.Objects.*;
+import student.adventure.Objects.Item;
+import student.adventure.Objects.Room;
 
 public class Inventory {
+
   private Map<String, Item> inventory;
 
   /**

@@ -1,6 +1,7 @@
 package student.adventure.Objects;
 
 public class Configuration {
+
   private String startingRoom;
   private String initializationText;
   private String victoryText;

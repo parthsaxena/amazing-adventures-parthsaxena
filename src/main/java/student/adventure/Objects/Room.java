@@ -3,6 +3,7 @@ package student.adventure.Objects;
 import java.util.Map;
 
 public class Room {
+
   private String name;
   private String description;
   private String type;

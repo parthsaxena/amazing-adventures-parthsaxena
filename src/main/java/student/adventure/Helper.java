@@ -1,8 +1,6 @@
 package student.adventure;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import student.adventure.Objects.Item;
 import student.adventure.Objects.Room;
 
@@ -41,12 +39,11 @@ public class Helper {
     }
 
     // Cut off the last two characters because of extra comma
-    return stringList.substring(0, stringList.length()-2);
+    return stringList.substring(0, stringList.length() - 2);
   }
 
   /**
-   * Separates a list of Item objects by commas and includes name and price
-   * of item
+   * Separates a list of Item objects by commas and includes name and price of item
    *
    * @param collection
    * @return
@@ -60,8 +57,8 @@ public class Helper {
   }
 
   /**
-   * Returns a list of items the player must obtain to enter the given room
-   * Returns null if player meets all requirements
+   * Returns a list of items the player must obtain to enter the given room Returns null if player
+   * meets all requirements
    *
    * @param roomKey
    * @return

@@ -1,9 +1,7 @@
 package student.adventure;
 
-import student.adventure.Inventory;
-import student.adventure.Objects.*;
-
 public class Player {
+
   private Inventory inventory;
   private Float money;
 
