@@ -1,0 +1,118 @@
+{
+  "Configuration":{
+    "startingRoom":"Ikenberry Commons",
+    "initializationText": "Welcome to Illini Frenzy 3.0!",
+    "victoryText": "Oh well-thanks for playing!"
+  },
+  "Rooms":{
+    "Wassaja Hall": {
+      "name": "Wassaja Hall",
+      "type": "win",
+      "description": "You burst into Wassaja Hall and find your friend lying dead next to the door! He died just minutes before...",
+      "items": {
+      },
+      "requirements": ["Blood-Stained Wassaja iCard"],
+      "directions": {
+        "East": "The Ike"
+      }
+    },
+    "Ikenberry Commons": {
+      "name": "Ikenberry Commons",
+      "type": "room",
+      "description": "You are at the north entry of the Ikenberry Commons, near Wassaja Hall. Your friend from Wassaja is missing! You need to find him!",
+      "items": {
+        "dining hall key": {
+          "name": "Dining Hall Key",
+          "description":"You pick up a silver key used to unlock the Ikenberry Dining Hall.",
+          "value": 10
+        }
+      },
+      "requirements": [],
+      "directions": {
+        "East": "The Ike",
+        "West": "Wassaja Hall"
+      }
+    },
+    "The Ike": {
+      "name": "The Ike",
+      "type": "room",
+      "description": "You are at the Ike, a hub for all Ikenberry activities.",
+      "items": {
+        "uiuc face mask": {
+          "name": "UIUC Face Mask",
+          "description": "You pick up a UIUC-styled face mask. This was the trend just a few months ago–who knows how much it will sell for now...",
+          "value": 20
+        },
+        "package station key": {
+          "name": "Package Station Key",
+          "description": "You pick up a golden key that has \"SDRP\" inscribed on it. Could this open the Ikenberry Package Station?",
+          "value": 5
+        }
+      },
+      "requirements": [],
+      "directions": {
+        "North": "Ikenberry Dining Hall",
+        "West": "Ikenberry Commons",
+        "East": "Vending Machine",
+        "South": "Package Station"
+      }
+    },
+    "Package Station": {
+      "name": "Package Station",
+      "type": "room",
+      "description": "You are at the Ikenberry Package Station. There's packages all over the place. Some might be valuable...",
+      "items": {
+        "hand sanitizer": {
+          "name": "Hand Sanitizer",
+          "description": "You pick up a bottle of Hand Sanitizer. This was quite the commodity back during the pandemic. You could get quite a bit of money out of this.",
+          "value": 20
+        },
+        "toilet paper": {
+          "name": "Toilet Paper",
+          "description": "You pick up a pack of Charmin Toilet Paper. Perhaps more valuable than the Hand Sanitizer, this could make you a lot of money.",
+          "value": 30
+        }
+      },
+      "requirements": ["Package Station Key"],
+      "directions": {
+        "North": "The Ike"
+      }
+    },
+    "Ikenberry Dining Hall": {
+      "name": "Ikenberry Dining Hall",
+      "type": "room",
+      "description": "You are at the south entry of the Ike Dining Hall. The room's a mess and there's a rotten smell coming from the kitchen.",
+      "items": {
+        "vending machine key": {
+          "name": "Vending Machine Key",
+          "description": "You pick up a rusty key used to unlock the entrance to the Ikenberry Vending Machine, a notorious store known to rip students off. This may help you get to Wassaja.",
+          "value": 0
+        },
+        "moldy candy bar": {
+          "name": "Moldy Candy Bar",
+          "description": "You pick up a moldy candy bar that expired a month ago. This will sell for a fortune at the Vending Machine.",
+          "value": 25
+        }
+      },
+      "requirements": ["Dining Hall Key"],
+      "directions": {
+        "South": "The Ike"
+      }
+    },
+    "Vending Machine": {
+      "type":"store",
+      "description": "You find yourself at vending machine that allows you to sell items for cash. Try the \"sell\" and \"valueof\" command.",
+      "items": {
+        "blood-stained wassaja icard": {
+          "name": "Blood-Stained Wassaja iCard",
+          "description": "WHAT! It's your best friend's iCard with blood stains. He's from Wassaja Hall. You need to save him!",
+          "value": 100
+        }
+      },
+      "requirements": ["Vending Machine Key"],
+      "directions": {
+        "West": "The Ike"
+      }
+    }
+  }
+}

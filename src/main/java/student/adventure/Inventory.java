@@ -57,6 +57,7 @@ public class Inventory {
       return new Result("The item \"" + argument + "\" is already in this room!", State.FAILURE);
     }
 
+    // Remove item from inventory and add to current room
     Item item = inventory.get(argument);
     inventory.remove(argument);
     currentRoom.getItems().put(argument, item);
@@ -72,6 +73,7 @@ public class Inventory {
    */
   public Result inspectItem(String argument) {
     argument = argument.toLowerCase();
+
     // Check if player has this item
     if (!hasItem(argument)) {
       return new Result("You do not have \"" + argument + "\" in your inventory!", State.FAILURE);
@@ -86,6 +88,8 @@ public class Inventory {
    * @return
    */
   public boolean hasItem(String argument) {
+    argument = argument.toLowerCase();
+
     return this.inventory.containsKey(argument.toLowerCase());
   }
 
@@ -96,6 +100,8 @@ public class Inventory {
    * @return Item object
    */
   public Item getItem(String argument) {
+    argument = argument.toLowerCase();
+
     return inventory.getOrDefault(argument, null);
   }
 

@@ -1,8 +1,10 @@
 package student.adventure;
 
 import java.util.Map;
-import java.util.Set;
-import student.adventure.Objects.*;
+import student.adventure.Objects.Configuration;
+import student.adventure.Objects.Direction;
+import student.adventure.Objects.Item;
+import student.adventure.Objects.Room;
 
 public class GameEngine {
 
@@ -22,13 +24,14 @@ public class GameEngine {
     this.configuration = configuration;
     this.player = new Player();
 
+    // Load starting room based on Game Configuration
     String currentRoomKey = configuration.getStartingRoom();
     this.currentRoom = rooms.get(currentRoomKey);
   }
 
   /**
-   * Constructor to instantiate the Game Engine with the specified starting
-   * room for testing purposes
+   * Constructor to instantiate the Game Engine with the specified starting room for testing
+   * purposes
    *
    * @param rooms
    * @param configuration
@@ -39,6 +42,7 @@ public class GameEngine {
     this.configuration = configuration;
     this.player = new Player();
 
+    // Manually load given room for testing purposes
     this.currentRoom = rooms.get(startingRoom);
   }
 
@@ -56,7 +60,6 @@ public class GameEngine {
     } catch (IllegalArgumentException e) {
       return new Result("You can't go \"" + argument + "\"!", State.FAILURE);
     }
-
     // Check if this room has a route in the given direction
     if (currentRoom.getDirections().containsKey(direction.getKey())) {
       String roomKey = currentRoom.getDirections().get(direction.getKey());
@@ -64,18 +67,19 @@ public class GameEngine {
       // Check if player meets requirements to enter this room
       String missingRequirements = Helper.getMissingRequirements(roomKey, this);
       if (missingRequirements != null) {
-        return new Result("You need the following items to enter this room: " + missingRequirements, State.FAILURE);
+        return new Result("You need the following items to enter this room: " + missingRequirements,
+            State.FAILURE);
       }
 
       // Update room state and check if victorious
-      Room room = rooms.get(roomKey);
-      this.currentRoom = room;
+      this.currentRoom = rooms.get(roomKey);;
       if (currentRoom.getType().equals("win")) {
         return new Result(currentRoom.getDescription(), State.VICTORY);
       }
       return new Result("", State.SUCCESS);
     }
-    return new Result("You can't go \"" + direction.getKey() + "\"!", State.SUCCESS);
+    // The direction the user gave is invalid
+    return new Result("You can't go \"" + direction.getKey() + "\"!", State.FAILURE);
   }
 
   /**
@@ -136,8 +140,8 @@ public class GameEngine {
     // Give money to Player
     Item toSell = player.getInventory().getItem(argument);
     player.addMoney(toSell.getValue());
-    // "Drop" item into store
 
+    // "Drop" item into store
     this.player.getInventory().dropItem(toSell.getName(), currentRoom);
 
     return new Result("Transaction successful!", State.SUCCESS);
@@ -154,17 +158,19 @@ public class GameEngine {
     if (!currentRoom.getType().equals("store")) {
       return new Result("You must be a in a store to buy items!", State.FAILURE);
     }
+
     // Check if store has this item in stock
     if (!currentRoom.getItems().containsKey(argument.toLowerCase())) {
       return new Result("\"" + argument + "\" is not for sale!", State.FAILURE);
     }
-    // Take money from Player
+
+    // Check if enough money and take money from Player
     Item toBuy = currentRoom.getItems().get(argument.toLowerCase());
-    // Check if player has enough money
     if (player.getMoney() < toBuy.getValue()) {
       return new Result("You don't have enough money!", State.FAILURE);
     }
     player.subtractMoney(toBuy.getValue());
+
     // "Give" item to Player's inventory
     this.player.getInventory().takeItem(argument, currentRoom);
 
