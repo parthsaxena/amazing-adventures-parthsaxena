@@ -50,12 +50,14 @@ public class GameEngine {
    */
   public Result changeDirection(String argument) {
     Direction direction;
+    // Check if the user inputted an actual cardinal direction
     try {
       direction = Direction.valueOf(argument.toUpperCase());
     } catch (IllegalArgumentException e) {
       return new Result("You can't go \"" + argument + "\"!", State.FAILURE);
     }
 
+    // Check if this room has a route in the given direction
     if (currentRoom.getDirections().containsKey(direction.getKey())) {
       String roomKey = currentRoom.getDirections().get(direction.getKey());
 
@@ -64,7 +66,6 @@ public class GameEngine {
       if (missingRequirements != null) {
         return new Result("You need the following items to enter this room: " + missingRequirements, State.FAILURE);
       }
-
       Room room = rooms.get(roomKey);
       this.currentRoom = room;
 
@@ -123,15 +124,18 @@ public class GameEngine {
     if (!currentRoom.getType().equals("store")) {
       return new Result("You must be a in a store to sell items!", State.FAILURE);
     }
+
     // Check if player has this item
     if (!player.getInventory().hasItem(argument)) {
       return new Result("You do not have \"" + argument + "\" in your inventory!", State.FAILURE);
     }
+
     // Give money to Player
     Item toSell = player.getInventory().getItem(argument);
     player.addMoney(toSell.getValue());
     // "Drop" item into store
-    this.dropItem(toSell.getName());
+
+    this.player.getInventory().dropItem(toSell.getName(), currentRoom);
 
     return new Result("Transaction successful!", State.SUCCESS);
   }
@@ -174,7 +178,7 @@ public class GameEngine {
   }
 
   /**
-   * Teleports the player to a given room FOR TESTING PURPOSES
+   * Teleports the player to a given room for testing purposes
    */
   public void teleport(String roomKey) {
     Room room = rooms.get(roomKey);

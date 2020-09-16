@@ -112,6 +112,31 @@ public class AdventureTest {
     }
 
     @Test
+    public void validateSellInventoryManagement() throws IOException {
+        Path path = Paths.get("src/main/java/data/data.json");
+        IO manager = new IO(path);
+        manager.start("Ikenberry Commons");
+
+        GameEngine engine = manager.getEngine();
+        engine.takeItem("diNINg hAll keY");
+        engine.teleport("Vending Machine");
+        engine.sellItem("dining hall key");
+        assertEquals(0, engine.getPlayer().getInventory().getInventorySet().size());
+    }
+
+    @Test
+    public void validateBuyInventoryManagement() throws IOException {
+        Path path = Paths.get("src/main/java/data/data.json");
+        IO manager = new IO(path);
+        manager.start("Vending Machine");
+
+        GameEngine engine = manager.getEngine();
+        engine.getPlayer().addMoney(100F);
+        engine.buyItem("Blood-Stained Wassaja iCard");
+        assertEquals(1, engine.getPlayer().getInventory().getInventorySet().size());
+    }
+
+    @Test
     public void validateGoAction() throws IOException {
         Path path = Paths.get("src/main/java/data/data.json");
         IO manager = new IO(path);
