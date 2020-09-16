@@ -3,10 +3,15 @@ package student.adventure.Objects;
 import java.util.Map;
 
 public class Room {
+  private String name;
   private String description;
   private String type;
   private Map<String, Item> items;
   private Map<String, String> directions;
+
+  public String getName() {
+    return name;
+  }
 
   public String getType() {
     return type;

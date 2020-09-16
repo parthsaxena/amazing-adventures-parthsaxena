@@ -89,6 +89,10 @@ public class GameEngine {
    * @return
    */
   public Result dropItem(String argument) {
+    if (currentRoom.getType().equals("store")) {
+      return new Result("You can't drop this item here!", State.FAILURE);
+    }
+
     return this.player.getInventory().dropItem(argument, currentRoom);
   }
 

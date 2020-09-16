@@ -61,7 +61,7 @@ public class Inventory {
     inventory.remove(argument);
     currentRoom.getItems().put(argument, item);
 
-    return new Result("", State.FAILURE);
+    return new Result("", State.SUCCESS);
   }
 
   /**

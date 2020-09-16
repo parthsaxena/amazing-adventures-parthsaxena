@@ -304,7 +304,23 @@ public class IO {
    */
   private void sanitizeData(Data data) {
     try {
-      Helper.checkNull(data);
+      for (Room room : data.getRooms().values()) {
+        // Check if room has necessary fields
+        Helper.checkNull(room.getDirections());
+        Helper.checkNull(room.getDescription());
+        Helper.checkNull(room.getType());
+
+        // Check if all directions point to valid rooms
+        for (String roomKey : room.getDirections().values()) {
+          Helper.checkNull(data.getRooms().get(roomKey));
+        }
+        // Check if all items have necessary fields
+        for (Item item : room.getItems().values()) {
+          Helper.checkNull(item.getName());
+          Helper.checkNull(item.getDescription());
+          Helper.checkNull(item.getValue());
+        }
+      }
       this.data = data;
     } catch(Exception e) {
       throw new IllegalArgumentException("Input JSON has invalid schema / data.");
