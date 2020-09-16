@@ -56,9 +56,15 @@ public class GameEngine {
       return new Result("You can't go \"" + argument + "\"!", State.FAILURE);
     }
 
-    Set<String> directionSet = this.currentRoom.getDirections().keySet();
-    if (directionSet.contains(direction.getKey())) {
+    if (currentRoom.getDirections().containsKey(direction.getKey())) {
       String roomKey = currentRoom.getDirections().get(direction.getKey());
+
+      // Check if player meets requirements to enter this room
+      String missingRequirements = Helper.getMissingRequirements(roomKey, this);
+      if (missingRequirements != null) {
+        return new Result("You need the following items to enter this room: " + missingRequirements, State.FAILURE);
+      }
+
       Room room = rooms.get(roomKey);
       this.currentRoom = room;
 
@@ -165,6 +171,14 @@ public class GameEngine {
    */
   public Result getMoney() {
     return new Result("You have $" + player.getMoney() + ".", State.SUCCESS);
+  }
+
+  /**
+   * Teleports the player to a given room FOR TESTING PURPOSES
+   */
+  public void teleport(String roomKey) {
+    Room room = rooms.get(roomKey);
+    this.currentRoom = room;
   }
 
   public Map<String, Room> getRooms() {

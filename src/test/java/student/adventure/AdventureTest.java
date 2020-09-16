@@ -28,6 +28,31 @@ public class AdventureTest {
     }
 
     @Test
+    public void testMissingRoomRequirements() throws IOException {
+        Path path = Paths.get("src/main/java/data/data.json");
+        IO manager = new IO(path);
+        manager.start("The Ike");
+
+        GameEngine engine = manager.getEngine();
+        Result res = engine.changeDirection("North");
+        assertEquals(State.FAILURE, res.getState());
+    }
+
+    @Test
+    public void testMeetsRoomRequirements() throws IOException {
+        Path path = Paths.get("src/main/java/data/data.json");
+        IO manager = new IO(path);
+        manager.start("Ikenberry Commons");
+
+        GameEngine engine = manager.getEngine();
+        engine.takeItem("Dining Hall Key");
+        engine.changeDirection("East");
+        Result res = engine.changeDirection("North");
+
+        assertEquals(State.SUCCESS, res.getState());
+    }
+
+    @Test
     public void validateTakeAction() throws IOException {
         Path path = Paths.get("src/main/java/data/data.json");
         IO manager = new IO(path);
@@ -115,10 +140,9 @@ public class AdventureTest {
         manager.start("Ikenberry Commons");
 
         GameEngine engine = manager.getEngine();
+        // Pick up an item
         engine.takeItem("Dining Hall Key");
-        // go to store
-        engine.changeDirection("east");
-        engine.changeDirection("east");
+        engine.teleport("Vending Machine");
 
         Result res = engine.dropItem("dining hall key");
         assertEquals(State.FAILURE, res.getState());

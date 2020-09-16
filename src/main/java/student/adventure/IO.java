@@ -328,6 +328,7 @@ public class IO {
         Helper.checkNull(room.getDirections());
         Helper.checkNull(room.getDescription());
         Helper.checkNull(room.getType());
+        Helper.checkNull(room.getName());
 
         // Check if all directions point to valid rooms
         for (String roomKey : room.getDirections().values()) {

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import student.adventure.Objects.Item;
+import student.adventure.Objects.Room;
 
 public class Helper {
 
@@ -56,6 +57,33 @@ public class Helper {
       res += key.getName() + " - $" + key.getValue() + ", ";
     }
     return res;
+  }
+
+  /**
+   * Returns a list of items the player must obtain to enter the given room
+   * Returns null if player meets all requirements
+   *
+   * @param roomKey
+   * @return
+   */
+  public static String getMissingRequirements(String roomKey, GameEngine engine) {
+    Room room = engine.getRooms().get(roomKey);
+    String missingRequirements = null;
+
+    // Iterate through all requirements and add to list if player does not meet
+    for (String req : room.getRequirements()) {
+      if (!engine.getPlayer().getInventory().hasItem(req.toLowerCase())) {
+        if (missingRequirements == null) {
+          missingRequirements = req + ", ";
+        }
+      }
+    }
+
+    // Take substring due to extra comma at end
+    if (missingRequirements != null) {
+      return missingRequirements.substring(0, missingRequirements.length() - 2);
+    }
+    return missingRequirements;
   }
 
   /**

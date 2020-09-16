@@ -8,6 +8,11 @@ public class Room {
   private String type;
   private Map<String, Item> items;
   private Map<String, String> directions;
+  private String[] requirements;
+
+  public String[] getRequirements() {
+    return requirements;
+  }
 
   public String getName() {
     return name;

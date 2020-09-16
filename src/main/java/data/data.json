@@ -9,7 +9,7 @@
     "Ikenberry Commons": {
       "name": "Ikenberry Commons",
       "type": "room",
-      "description": "You are at the north entry of the Ikenberry Commons, near Wassaja Hall. There seems to be no student in sight. Weird.",
+      "description": "You are at the north entry of the Ikenberry Commons, near Wassaja Hall. Your friend from Wassaja Hall is missing! You need to find him!",
       "items": {
         "dining hall key": {
           "name": "Dining Hall Key",
@@ -17,6 +17,7 @@
           "value": 10
         }
       },
+      "requirements": [],
       "directions": {
         "East": "The Ike"
       }
@@ -28,6 +29,7 @@
       "items": {
 
       },
+      "requirements": [],
       "directions": {
         "North": "Ikenberry Dining Hall",
         "West": "Ikenberry Commons",
@@ -39,8 +41,13 @@
       "type": "room",
       "description": "You are at the south entry of the Ike Dining Hall. The room's a mess and there's a rotten smell coming from the kitchen.",
       "items": {
-
+        "vending machine key": {
+          "name": "Vending Machine Key",
+          "description": "You pick up a rusty key used to unlock the entrance to the Ikenberry Vending Machine, a notorious store known to rip students off.",
+          "value": 0
+        }
       },
+      "requirements": ["Dining Hall Key"],
       "directions": {
         "South": "The Ike"
       }
@@ -52,10 +59,11 @@
       "items": {
         "blood-stained wassaja icard": {
           "name": "Blood-Stained Wassaja iCard",
-          "description": "WHAT! It's your best friend's iCard with blood stains. He's from Wassaja Hall. You should check this out.",
+          "description": "WHAT! It's your best friend's iCard with blood stains. He's from Wassaja Hall. You need to save him!.",
           "value": 100
         }
       },
+      "requirements": ["Vending Machine Key"],
       "directions": {
         "West": "The Ike"
       }
