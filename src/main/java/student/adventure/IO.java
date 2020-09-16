@@ -32,6 +32,7 @@ public class IO {
     gson = new Gson();
     scanner = new Scanner(System.in);
 
+    // Read JSON from file
     Reader reader = Files.newBufferedReader(path);
     Data data = gson.fromJson(reader, Data.class);
     sanitizeData(data);
@@ -40,8 +41,8 @@ public class IO {
   }
 
   /**
-   * Populates a HashMap that relates a String action to a function that
-   * handles that action
+   * Populates a HashMap that Maps a String action (i.e. "go", "take") to
+   * a function that handles that action
    */
   private void populateActionMap() {
     actionMap = new HashMap<>();
@@ -118,8 +119,10 @@ public class IO {
    * Begins the game with preliminary output
    */
   public void start() {
+    // Print out Game information
     System.out.println(data.getConfiguration().getInitializationText() + "\n");
 
+    // Instantiate Game Engine
     engine = new GameEngine(data.getRooms(), data.getConfiguration());
     examine();
   }
@@ -171,10 +174,12 @@ public class IO {
    */
   private void dissectCommand(String command) {
     command = command.toLowerCase().trim();
+    // Separate the action from the argument
     int firstArgIndex = command.indexOf(' ');
-
     String action = "";
     String argument = "";
+
+    // Handle single word commands
     if (firstArgIndex == -1) {
       action = command;
     } else {
@@ -182,6 +187,7 @@ public class IO {
       argument = command.substring(firstArgIndex).trim();
     }
 
+    // If actionMap contains this action, it's potentially valid
     if (actionMap.containsKey(action)) {
       actionMap.get(action).performAction(argument);
     } else {
@@ -195,6 +201,7 @@ public class IO {
    * @param argument
    */
   private Result handleTakeAction(String argument) {
+    // Get response from Game Engine
     Result res = engine.takeItem(argument);
     System.out.println(res.getMessage());
     prompt();
@@ -208,7 +215,9 @@ public class IO {
    * @param argument
    */
   private Result handleDropAction(String argument) {
+    // Get response from Game Engine
     Result res = engine.dropItem(argument);
+    // We only need to print response message if failure
     if (res.getState() == State.FAILURE) {
       System.out.println(res.getMessage());
     }
@@ -224,6 +233,7 @@ public class IO {
    * @return
    */
   private Result handleMoneyAction(String argument) {
+    // Get response from Game Engine
     Result res = engine.getMoney();
     System.out.println(res.getMessage());
 
@@ -237,10 +247,12 @@ public class IO {
    * @param direction
    */
   private Result handleGoAction(String direction) {
+    // Get response from Game Engine
     Result res = engine.changeDirection(direction);
     if (res.getState() == State.FAILURE) {
       System.out.println(res.getMessage());
     } else {
+      // Examine the new room
       examine();
     }
 
@@ -254,6 +266,7 @@ public class IO {
    * @param argument
    */
   private Result handleInspectAction(String argument) {
+    // Get response from Game Engine
     Result res = engine.inspectItem(argument);
     System.out.println(res.getMessage());
 
@@ -267,6 +280,7 @@ public class IO {
    * @param argument
    */
   private Result handleSellAction(String argument) {
+    // Get response from Game Engine
     Result res = engine.sellItem(argument);
     System.out.println(res.getMessage());
 
@@ -280,6 +294,7 @@ public class IO {
    * @param argument
    */
   private Result handleBuyAction(String argument) {
+    // Get response from Game Engine
     Result res = engine.buyItem(argument);
     System.out.println(res.getMessage());
 
@@ -304,6 +319,10 @@ public class IO {
    */
   private void sanitizeData(Data data) {
     try {
+      // Sanitize game configuration
+      Helper.checkNull(data.getConfiguration().getInitializationText());
+
+      // Sanitize Rooms and Items
       for (Room room : data.getRooms().values()) {
         // Check if room has necessary fields
         Helper.checkNull(room.getDirections());
@@ -332,6 +351,9 @@ public class IO {
   }
 }
 
+/*
+ * Enum that specifies what values to separate in pretty print list
+ */
 enum StringList {
   DIRECTIONS,
   ITEMS,
