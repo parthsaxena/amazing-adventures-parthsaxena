@@ -1,15 +1,25 @@
 {
   "Configuration":{
     "startingRoom":"Ikenberry Commons",
-    "winningRoom":"State Farm Stadium",
-    "winningItems":[],
-    "initializationText": "Welcome to Illini Frenzy 3.0!"
+    "initializationText": "Welcome to Illini Frenzy 3.0!",
+    "victoryText": "Oh well-thanks for playing!"
   },
   "Rooms":{
+    "Wassaja Hall": {
+      "name": "Wassaja Hall",
+      "type": "win",
+      "description": "You burst into Wassaja Hall and find your friend lying dead next to the door! He died just minutes before...",
+      "items": {
+      },
+      "requirements": ["Blood-Stained Wassaja iCard"],
+      "directions": {
+        "East": "The Ike"
+      }
+    },
     "Ikenberry Commons": {
       "name": "Ikenberry Commons",
       "type": "room",
-      "description": "You are at the north entry of the Ikenberry Commons, near Wassaja Hall. Your friend from Wassaja Hall is missing! You need to find him!",
+      "description": "You are at the north entry of the Ikenberry Commons, near Wassaja Hall. Your friend from Wassaja is missing! You need to find him!",
       "items": {
         "dining hall key": {
           "name": "Dining Hall Key",
@@ -19,7 +29,8 @@
       },
       "requirements": [],
       "directions": {
-        "East": "The Ike"
+        "East": "The Ike",
+        "West": "Wassaja Hall"
       }
     },
     "The Ike": {

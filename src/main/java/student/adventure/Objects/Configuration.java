@@ -5,6 +5,11 @@ public class Configuration {
   private String winningRoom;
   private String[] winningItems;
   private String initializationText;
+  private String victoryText;
+
+  public String getVictoryText() {
+    return victoryText;
+  }
 
   public String getStartingRoom() {
     return startingRoom;

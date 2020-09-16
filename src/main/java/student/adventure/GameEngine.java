@@ -66,13 +66,16 @@ public class GameEngine {
       if (missingRequirements != null) {
         return new Result("You need the following items to enter this room: " + missingRequirements, State.FAILURE);
       }
+
+      // Update room state and check if victorious
       Room room = rooms.get(roomKey);
       this.currentRoom = room;
-
+      if (currentRoom.getType().equals("win")) {
+        return new Result(currentRoom.getDescription(), State.VICTORY);
+      }
       return new Result("", State.SUCCESS);
-    } else {
-      return new Result("You can't go \"" + direction.getKey() + "\"!", State.SUCCESS);
     }
+    return new Result("You can't go \"" + direction.getKey() + "\"!", State.SUCCESS);
   }
 
   /**

@@ -172,4 +172,23 @@ public class AdventureTest {
         Result res = engine.dropItem("dining hall key");
         assertEquals(State.FAILURE, res.getState());
     }
+
+    @Test
+    public void testVictory() throws IOException {
+        Path path = Paths.get("src/main/java/data/data.json");
+        IO manager = new IO(path);
+        manager.start("Vending Machine");
+
+        GameEngine engine = manager.getEngine();
+        // Get item necessary for win
+        engine.getPlayer().addMoney(100F);
+        engine.buyItem("blood-stained wassaja icard");
+
+        // Travel to victory room
+        engine.changeDirection("west");
+        engine.changeDirection("west");
+        Result res = engine.changeDirection("west");
+
+        assertEquals(State.VICTORY, res.getState());
+    }
 }

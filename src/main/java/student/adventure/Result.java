@@ -2,7 +2,8 @@ package student.adventure;
 
 enum State {
   SUCCESS,
-  FAILURE
+  FAILURE,
+  VICTORY
 }
 
 public class Result {

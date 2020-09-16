@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -251,6 +252,9 @@ public class IO {
     Result res = engine.changeDirection(direction);
     if (res.getState() == State.FAILURE) {
       System.out.println(res.getMessage());
+    } else if (res.getState() == State.VICTORY) {
+      handleVictory(res.getMessage());
+      return res;
     } else {
       // Examine the new room
       examine();
@@ -321,6 +325,8 @@ public class IO {
     try {
       // Sanitize game configuration
       Helper.checkNull(data.getConfiguration().getInitializationText());
+      Helper.checkNull(data.getConfiguration().getVictoryText());
+      Helper.checkNull(data.getConfiguration().getStartingRoom());
 
       // Sanitize Rooms and Items
       for (Room room : data.getRooms().values()) {
@@ -345,6 +351,21 @@ public class IO {
     } catch(Exception e) {
       throw new IllegalArgumentException("Input JSON has invalid schema / data.");
     }
+  }
+
+  /**
+   * Handle player victory
+   */
+  private void handleVictory(String message) {
+    // Print nice divider text that matches the length of the message
+    char[] dividerText = new char[message.length()];
+    Arrays.fill(dividerText, '-');
+    System.out.println(new String(dividerText));
+
+    // Print message and victory text
+    System.out.println(message + "\n");
+    System.out.println(engine.getConfiguration().getVictoryText());
+    System.exit(0);
   }
 
   protected GameEngine getEngine() {
